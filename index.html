@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Descargador YouTube Seguro</title>
+    <title>Descargador de YouTube Seguro</title>
     <style>
         * {
             margin: 0;
@@ -34,14 +34,14 @@
 
         h1 {
             color: #333;
-            margin-bottom: 30px;
+            margin-bottom: 10px;
             font-size: 2.5em;
-            font-weight: 300;
+            font-weight: 700;
         }
 
         .subtitle {
             color: #666;
-            margin-bottom: 40px;
+            margin-bottom: 30px;
             font-size: 1.1em;
         }
 
@@ -50,7 +50,7 @@
             position: relative;
         }
 
-        input[type="url"] {
+        .url-input {
             width: 100%;
             padding: 15px 20px;
             border: 2px solid #e0e0e0;
@@ -61,21 +61,20 @@
             background: white;
         }
 
-        input[type="url"]:focus {
+        .url-input:focus {
             border-color: #667eea;
-            box-shadow: 0 0 20px rgba(102, 126, 234, 0.2);
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
         }
 
         .format-selector {
             display: flex;
-            gap: 15px;
+            gap: 10px;
+            margin-bottom: 20px;
             justify-content: center;
-            margin-bottom: 30px;
-            flex-wrap: wrap;
         }
 
-        .format-option {
-            padding: 10px 20px;
+        .format-btn {
+            padding: 12px 24px;
             border: 2px solid #e0e0e0;
             border-radius: 25px;
             background: white;
@@ -84,15 +83,15 @@
             font-weight: 500;
         }
 
-        .format-option:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-        }
-
-        .format-option.active {
+        .format-btn.active {
             background: #667eea;
             color: white;
             border-color: #667eea;
+        }
+
+        .format-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
         }
 
         .download-btn {
@@ -105,32 +104,55 @@
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s ease;
-            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+            width: 100%;
+            max-width: 300px;
         }
 
-        .download-btn:hover:not(:disabled) {
-            transform: translateY(-3px);
-            box-shadow: 0 15px 40px rgba(102, 126, 234, 0.4);
+        .download-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
         }
 
         .download-btn:disabled {
             opacity: 0.6;
             cursor: not-allowed;
+            transform: none;
         }
 
-        .loading {
-            display: none;
+        .status {
             margin-top: 20px;
+            padding: 15px;
+            border-radius: 10px;
+            display: none;
         }
 
-        .spinner {
+        .status.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .status.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .status.loading {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+
+        .loading-spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
             border: 3px solid #f3f3f3;
             border-top: 3px solid #667eea;
             border-radius: 50%;
-            width: 40px;
-            height: 40px;
             animation: spin 1s linear infinite;
-            margin: 0 auto 15px;
+            margin-right: 10px;
         }
 
         @keyframes spin {
@@ -138,95 +160,44 @@
             100% { transform: rotate(360deg); }
         }
 
-        .result {
-            margin-top: 30px;
-            padding: 20px;
-            border-radius: 15px;
-            display: none;
-        }
-
-        .result.success {
-            background: rgba(76, 175, 80, 0.1);
-            border: 1px solid rgba(76, 175, 80, 0.3);
-            color: #2e7d32;
-        }
-
-        .result.error {
-            background: rgba(244, 67, 54, 0.1);
-            border: 1px solid rgba(244, 67, 54, 0.3);
-            color: #c62828;
-        }
-
-        .download-link {
-            display: inline-block;
-            margin-top: 15px;
-            padding: 10px 25px;
-            background: #4caf50;
-            color: white;
-            text-decoration: none;
-            border-radius: 25px;
-            transition: all 0.3s ease;
-        }
-
-        .download-link:hover {
-            background: #45a049;
-            transform: translateY(-2px);
-        }
-
         .info-box {
-            background: rgba(33, 150, 243, 0.1);
-            border: 1px solid rgba(33, 150, 243, 0.3);
-            border-radius: 15px;
-            padding: 20px;
-            margin-top: 30px;
-            color: #1565c0;
-        }
-
-        .warning {
-            background: rgba(255, 193, 7, 0.1);
-            border: 1px solid rgba(255, 193, 7, 0.3);
-            color: #f57c00;
-            margin-bottom: 20px;
-        }
-
-        .server-status {
-            padding: 10px;
+            background: rgba(102, 126, 234, 0.1);
             border-radius: 10px;
-            margin-bottom: 20px;
-            font-weight: 600;
-            text-align: center;
+            padding: 20px;
+            margin-top: 20px;
+            text-align: left;
         }
 
-        .server-status.active {
-            background: rgba(76, 175, 80, 0.1);
-            border: 1px solid rgba(76, 175, 80, 0.3);
-            color: #2e7d32;
+        .info-box h3 {
+            color: #667eea;
+            margin-bottom: 10px;
         }
 
-        .server-status.sleeping {
-            background: rgba(255, 193, 7, 0.1);
-            border: 1px solid rgba(255, 193, 7, 0.3);
-            color: #f57c00;
+        .info-box ul {
+            color: #666;
+            line-height: 1.6;
         }
 
-        .server-status.error {
-            background: rgba(244, 67, 54, 0.1);
-            border: 1px solid rgba(244, 67, 54, 0.3);
-            color: #c62828;
+        .info-box li {
+            margin-bottom: 5px;
         }
 
         @media (max-width: 768px) {
             .container {
-                padding: 30px 20px;
+                padding: 20px;
             }
-            
+
             h1 {
                 font-size: 2em;
             }
-            
+
             .format-selector {
                 flex-direction: column;
                 align-items: center;
+            }
+
+            .format-btn {
+                width: 150px;
             }
         }
     </style>
@@ -234,165 +205,85 @@
 <body>
     <div class="container">
         <h1>🎵 Descargador Seguro</h1>
-        <p class="subtitle">Descarga videos y audio de YouTube de forma segura</p>
+        <p class="subtitle">Descarga videos y música de YouTube sin virus ni malware</p>
         
-        <div class="info-box warning">
-            <strong>⚠️ Importante:</strong> Solo descarga contenido que tengas derecho a usar. Respeta los derechos de autor.
+        <div class="input-group">
+            <input type="text" class="url-input" id="urlInput" placeholder="Pega aquí la URL de YouTube..." />
         </div>
 
-        <div id="serverStatus" class="server-status">
-            🔄 Verificando servidor...
+        <div class="format-selector">
+            <button class="format-btn active" data-format="mp3">🎵 MP3 (Audio)</button>
+            <button class="format-btn" data-format="mp4">🎬 MP4 (Video)</button>
         </div>
 
-        <form id="downloadForm">
-            <div class="input-group">
-                <input 
-                    type="url" 
-                    id="urlInput" 
-                    placeholder="Pega aquí la URL de YouTube (ej: https://www.youtube.com/watch?v=...)"
-                    required
-                >
-            </div>
+        <button class="download-btn" id="downloadBtn">
+            Descargar Contenido
+        </button>
 
-            <div class="format-selector">
-                <div class="format-option active" data-format="mp3">
-                    🎵 Audio MP3
-                </div>
-                <div class="format-option" data-format="mp4">
-                    🎥 Video MP4
-                </div>
-                <div class="format-option" data-format="webm">
-                    📹 Video WEBM
-                </div>
-            </div>
-
-            <button type="submit" class="download-btn" id="downloadBtn">
-                ⬇️ Descargar
-            </button>
-        </form>
-
-        <div class="loading" id="loading">
-            <div class="spinner"></div>
-            <p>Procesando tu descarga...</p>
-        </div>
-
-        <div class="result" id="result"></div>
+        <div class="status" id="statusDiv"></div>
 
         <div class="info-box">
-            <h3>📋 Instrucciones:</h3>
-            <p>1. Copia la URL del video de YouTube</p>
-            <p>2. Pégala en el campo de arriba</p>
-            <p>3. Selecciona el formato deseado</p>
-            <p>4. Haz clic en Descargar</p>
-            <br>
-            <p><strong>✅ Ventajas de este sitio:</strong></p>
-            <p>• Sin virus ni malware</p>
-            <p>• Sin anuncios molestos</p>
-            <p>• Rápido y seguro</p>
-            <p>• Respeta tu privacidad</p>
+            <h3>✅ Características de Seguridad:</h3>
+            <ul>
+                <li>• Sin anuncios maliciosos</li>
+                <li>• Sin descargas adicionales no deseadas</li>
+                <li>• Procesamiento en servidor seguro</li>
+                <li>• Sin instalación de software</li>
+                <li>• Completamente gratuito</li>
+            </ul>
         </div>
     </div>
 
     <script>
-        // Configuración - Cambia esta URL por la de tu API de Railway
-        const API_BASE_URL = 'https://tu-proyecto.up.railway.app'; // URL que te dará Railway
+        const API_BASE_URL = 'https://tu-app.railway.app'; // Cambia esto por tu URL de Railway
         
         let selectedFormat = 'mp3';
-        let serverStatus = 'unknown';
-
-        // Verificar estado del servidor al cargar
-        async function checkServerStatus() {
-            try {
-                const response = await fetch(`${API_BASE_URL}/health`, { 
-                    method: 'GET',
-                    timeout: 5000 
-                });
-                if (response.ok) {
-                    serverStatus = 'active';
-                    updateServerStatusUI('active');
-                } else {
-                    serverStatus = 'error';
-                    updateServerStatusUI('error');
-                }
-            } catch (error) {
-                serverStatus = 'sleeping';
-                updateServerStatusUI('sleeping');
-            }
-        }
-
-        function updateServerStatusUI(status) {
-            const statusElement = document.getElementById('serverStatus');
-            const downloadBtn = document.getElementById('downloadBtn');
-            
-            if (status === 'active') {
-                statusElement.innerHTML = '🟢 Servidor activo';
-                statusElement.className = 'server-status active';
-                downloadBtn.disabled = false;
-            } else if (status === 'sleeping') {
-                statusElement.innerHTML = '🟡 Servidor iniciando... (esto solo pasa en otros servicios)';
-                statusElement.className = 'server-status sleeping';
-                // Reintentar conexión
-                setTimeout(checkServerStatus, 3000);
-            } else {
-                statusElement.innerHTML = '🔴 Servidor no disponible';
-                statusElement.className = 'server-status error';
-            }
-        }
-
-        // Keep-alive automático (no necesario en Railway, pero no hace daño)
-        function keepServerAlive() {
-            setInterval(async () => {
-                if (serverStatus === 'active') {
-                    try {
-                        await fetch(`${API_BASE_URL}/health`);
-                        console.log('Keep-alive ping sent');
-                    } catch (error) {
-                        serverStatus = 'sleeping';
-                        updateServerStatusUI('sleeping');
-                    }
-                }
-            }, 600000); // 10 minutos
-        }
 
         // Manejo de selección de formato
-        document.querySelectorAll('.format-option').forEach(option => {
-            option.addEventListener('click', function() {
-                document.querySelectorAll('.format-option').forEach(opt => 
-                    opt.classList.remove('active'));
-                this.classList.add('active');
-                selectedFormat = this.dataset.format;
+        document.querySelectorAll('.format-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.format-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                selectedFormat = btn.dataset.format;
             });
         });
 
-        // Validación de URL de YouTube
-        function isValidYouTubeUrl(url) {
-            const patterns = [
-                /^https?:\/\/(www\.)?(youtube\.com\/watch\?v=|youtu\.be\/)[a-zA-Z0-9_-]+/,
-                /^https?:\/\/(www\.)?youtube\.com\/embed\/[a-zA-Z0-9_-]+/,
-                /^https?:\/\/(www\.)?youtube\.com\/v\/[a-zA-Z0-9_-]+/
-            ];
-            return patterns.some(pattern => pattern.test(url));
+        // Función para mostrar estado
+        function showStatus(message, type) {
+            const statusDiv = document.getElementById('statusDiv');
+            statusDiv.className = `status ${type}`;
+            statusDiv.style.display = 'block';
+            
+            if (type === 'loading') {
+                statusDiv.innerHTML = `<div class="loading-spinner"></div>${message}`;
+            } else {
+                statusDiv.innerHTML = message;
+            }
         }
 
-        // Manejo del formulario
-        document.getElementById('downloadForm').addEventListener('submit', async function(e) {
-            e.preventDefault();
-            
+        // Función para validar URL de YouTube
+        function isValidYouTubeUrl(url) {
+            const regex = /^(https?:\/\/)?(www\.)?(youtube\.com|youtu\.be)\/.+/;
+            return regex.test(url);
+        }
+
+        // Función principal de descarga
+        async function downloadContent() {
             const url = document.getElementById('urlInput').value.trim();
             const downloadBtn = document.getElementById('downloadBtn');
-            const loading = document.getElementById('loading');
-            const result = document.getElementById('result');
 
-            // Validar URL
-            if (!isValidYouTubeUrl(url)) {
-                showResult('error', '❌ Por favor, ingresa una URL válida de YouTube');
+            if (!url) {
+                showStatus('Por favor, ingresa una URL de YouTube', 'error');
                 return;
             }
 
-            // Mostrar loading
+            if (!isValidYouTubeUrl(url)) {
+                showStatus('Por favor, ingresa una URL válida de YouTube', 'error');
+                return;
+            }
+
             downloadBtn.disabled = true;
-            loading.style.display = 'block';
-            result.style.display = 'none';
+            showStatus('Procesando tu solicitud...', 'loading');
 
             try {
                 const response = await fetch(`${API_BASE_URL}/download`, {
@@ -406,50 +297,44 @@
                     })
                 });
 
+                if (!response.ok) {
+                    throw new Error(`Error del servidor: ${response.status}`);
+                }
+
                 const data = await response.json();
 
-                if (response.ok) {
-                    showResult('success', 
-                        `✅ ¡Descarga lista! 
-                        <br><strong>Título:</strong> ${data.title}
-                        <br><strong>Duración:</strong> ${data.duration}
-                        <a href="${API_BASE_URL}${data.download_url}" class="download-link" download>
-                            📥 Descargar ${selectedFormat.toUpperCase()}
-                        </a>`
-                    );
+                if (data.success) {
+                    showStatus('¡Descarga iniciada! El archivo se descargará automáticamente.', 'success');
+                    
+                    // Crear enlace de descarga
+                    const link = document.createElement('a');
+                    link.href = data.downloadUrl;
+                    link.download = data.filename;
+                    link.click();
                 } else {
-                    showResult('error', `❌ Error: ${data.error || 'No se pudo procesar la descarga'}`);
+                    showStatus(data.error || 'Error al procesar la descarga', 'error');
                 }
+
             } catch (error) {
                 console.error('Error:', error);
-                showResult('error', '❌ Error de conexión. Verifica tu conexión a internet.');
+                showStatus('Error de conexión. Por favor, intenta nuevamente.', 'error');
             } finally {
                 downloadBtn.disabled = false;
-                loading.style.display = 'none';
+            }
+        }
+
+        // Event listeners
+        document.getElementById('downloadBtn').addEventListener('click', downloadContent);
+
+        document.getElementById('urlInput').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                downloadContent();
             }
         });
 
-        function showResult(type, message) {
-            const result = document.getElementById('result');
-            result.className = `result ${type}`;
-            result.innerHTML = message;
-            result.style.display = 'block';
-        }
-
-        // Efecto de entrada suave y verificación inicial
-        window.addEventListener('load', function() {
-            document.querySelector('.container').style.opacity = '0';
-            document.querySelector('.container').style.transform = 'translateY(30px)';
-            
-            setTimeout(() => {
-                document.querySelector('.container').style.transition = 'all 0.6s ease';
-                document.querySelector('.container').style.opacity = '1';
-                document.querySelector('.container').style.transform = 'translateY(0)';
-            }, 100);
-
-            // Verificar estado del servidor y iniciar keep-alive
-            checkServerStatus();
-            keepServerAlive();
+        // Limpiar estado cuando se cambia la URL
+        document.getElementById('urlInput').addEventListener('input', () => {
+            document.getElementById('statusDiv').style.display = 'none';
         });
     </script>
 </body>
